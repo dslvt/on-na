@@ -11,7 +11,15 @@
         <input class="form-control my-0 py-1" type="text" placeholder="Search" aria-label="Search" id="search_input_field">
     </div>
 
-    <button id="search_button"> Find </button>
+    <div class="search_button">
+        <button type="button" class="btn btn-success" id="search_button"> Find </button>
+    </div>
+
+
+    <h3>Search results</h3>
+    <img src="{% static "home/simple car.jpg" %}">
+
+
     <script src="{% static "home/search.js" %}"></script>
 
 {% endblock content %}

@@ -51,7 +51,9 @@ search_button.addEventListener('click', function(){
         },
         dataType: 'json',
         success:function(data){
-            search_result.innerHTML = data['response']
+            document.getElementById('std_market').innerHTML = 'Standard deviation: ' + data['std']+'₽';
+            document.getElementById('mean_market').innerHTML = "Mean: " + data['mean']+'₽';
+            document.getElementById('n_market').innerHTML = "Amount: " + data['n'];
         },
         fail:function(data){
             search_result.innerHTML = "Cannot find"
@@ -62,19 +64,29 @@ search_button.addEventListener('click', function(){
 product_button.addEventListener('click', function(){
     $.ajax({
         url:'product/',
-        data:{},
+        data:{
+            'mark':input_mark.value,
+            'model':input_model.value,
+            'year':[input_year_from.value, input_year_to.value],
+            'engine':[input_eng_capacity_from.value, input_eng_capacity_to.value],
+            'millage':[input_mileage_from.value, input_mileage_to.value],
+            'kpp':transm
+        },
         dataType:'json',
         success:function(data) {
-
+            document.getElementById('multi_r_text').innerHTML = data['multi_r'],
+            document.getElementById('r_sqr_text').innerHTML = data['r_sqr'],
+            document.getElementById('norm_r_text').innerHTML = data['norm_r'],
+            document.getElementById('std_text').innerHTML = data['std'],
+            document.getElementById('n_text').innerHTML = data['n']
         },
         fail:function(data){
-
         }
     });
 });
 
 report_button.addEventListener('click', function(){
-    $.ajax(
+    $.ajax({
         url:'report/',
         data:{},
         dataType:'json',
@@ -84,5 +96,5 @@ report_button.addEventListener('click', function(){
         fail:function(data){
 
         }
-    );
+    });
 })

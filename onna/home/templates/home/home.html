@@ -47,16 +47,54 @@
 
     <div id="market_anal">
         <h3>Search results</h3>
+        <h4 id='std_market'>Standard deviation: </h4>
+        <h4 id='mean_market'>Mean: </h4>
+        <h4 id='n_market'>Amount: </h4>
         <img src="{% static "home/simple car.jpg" %}">
         <h1 id="search_result"></h1>
     </div>
 
     <div id="product_anal">
-        <h3>Product anal</h3>
+        <h3>Product analysis</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Val</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Множественный R</td>
+              <td class='multi_r_text'>Otto</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td class='r_sqr_text'>R-квадрат</td>
+              <td>Thornton</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td class='norm_r_text'>Нормированный R-квадрат</td>
+              <td>the Bird</td>
+            </tr>
+            <tr>
+                <th scope='row'>4</th>
+                <td class='std_text'>Стандартная ошибка</td>
+                <td>34</td>
+            </tr>
+            <tr>
+                <th scope='row'> 5</th>
+                <td class="n_text">Наблюдения</td>
+                <td>34</td>
+          </tbody>
+        </table>
     </div>
 
     <div id="report_anal">
-        <h3> Report anal</h3>
+        <h3>👇 Download report 👇</h3>
     </div>
 
     <script src="{% static "home/krasivo.js" %}"></script>

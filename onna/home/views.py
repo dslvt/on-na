@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from bs4 import BeautifulSoup as bf
 import urllib3
-
+import numpy as np
 
 def index(request):
     context = multiple_params
@@ -11,8 +11,11 @@ def index(request):
 
 def query(request):
     qr = request.GET.get('query', None)
+    soup = get_html_from_avito(qr)
     data = {
-        'response':get_data_from_avito(qr)
+        'std': round(get_market_std(soup)),
+        'mean': round(get_market_mean(soup)),
+        'n': round(get_market_n(soup))
     }
     return JsonResponse(data)
 
@@ -26,15 +29,29 @@ def product(request):
     data = {}
     return JsonResponse(data)
 
-def get_data_from_avito(params):
+def get_market_std(soup):
+    money = [money_prepros(d) for d in get_money(soup)]
+    train_x = np.array(money).astype(np.float64)
+    return train_x.std()
+
+def get_market_mean(soup):
+    money = [money_prepros(d) for d in get_money(soup)]
+    train_x = np.array(money).astype(np.float64)
+    return train_x.mean()
+
+def get_market_n(soup):
+    money = [money_prepros(d) for d in get_money(soup)]
+    train_x = np.array(money).astype(np.float64)
+    return len(train_x)
+
+def get_html_from_avito(params):
     http = urllib3.PoolManager()
     answer = ''
 
     avito_url = get_avito_url(params)
     r = http.request('GET', avito_url)
     soup = bf(r.data, 'html.parser')
-    answer = len([price.text for price in soup.find_all('span', {"class": "price"})])
-    return answer
+    return soup
 
 def get_avito_url(prm):
     base = 'https://www.avito.ru/rossiya/avtomobili'

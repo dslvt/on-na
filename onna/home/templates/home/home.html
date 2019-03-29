@@ -14,12 +14,22 @@
     <div class="search_button">
         <button type="button" class="btn btn-success" id="search_button"> Find </button>
     </div>
-
+    <div class="container_search">
+        <input type="text" class="form-control" id="input_mark"  placeholder="mark">
+        <input type="text" class="form-control" id="input_model"  placeholder="model">
+        <input type="text" class="form-control" id="input_year_from"  placeholder="year from">
+        <input type="text" class="form-control" id="input_year_to"  placeholder="year to">
+        <input type="text" class="form-control" id="eng_capacity_from"  placeholder="Engine capacity, from">
+        <input type="text" class="form-control" id="eng_capacity_to"  placeholder="Engine capacity, to">
+        <input type="text" class="form-control" id="mileage_from"  placeholder="Mileage from">
+        <input type="text" class="form-control" id="mileage_to"  placeholder="Mileage to">
+        <input type="text" class="form-control" id="trainsmission"  placeholder="Trainsmission type">
+        </div>
 
     <h3>Search results</h3>
     <img src="{% static "home/simple car.jpg" %}">
 
-
+    <script src="{% static "home/krasivo.js" %}"></script>
     <script src="{% static "home/search.js" %}"></script>
 
 {% endblock content %}

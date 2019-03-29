@@ -23,12 +23,7 @@
         <input type="checkbox" id="tr_variator"> Variator
     </div>
 
-    <h3>Your car values</h3>
-    <div class="container_search">
-        <input type="text" class="form-control" id="input_year_user"  placeholder="year">
-        <input type="text" class="form-control" id="eng_capacity_user"  placeholder="Engine capacity">
-        <input type="text" class="form-control" id="mileage_user"  placeholder="Mileage">
-    </div>
+
 
     <div class="button_type">
         <div class="search_button">
@@ -55,8 +50,17 @@
     </div>
 
     <div id="product_anal">
+        <h3>Your car values</h3>
+        <div class="container_search">
+            <input type="text" class="form-control" id="input_year_user"  placeholder="year">
+            <input type="text" class="form-control" id="eng_capacity_user"  placeholder="Engine capacity">
+            <input type="text" class="form-control" id="mileage_user"  placeholder="Mileage">
+            <input type="text" class="form-control" id="price_user" placeholder="Price">
+            <input type="text" class="form-control" id='u_h_power', placeholder="Amount of horse power">
+        </div>
+
         <h3>Product analysis</h3>
-        <table class="table">
+        <table class="table" id="product_table">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -68,27 +72,27 @@
             <tr>
               <th scope="row">1</th>
               <td>Множественный R</td>
-              <td class='multi_r_text'>Otto</td>
+              <td></td>
             </tr>
             <tr>
               <th scope="row">2</th>
-              <td class='r_sqr_text'>R-квадрат</td>
-              <td>Thornton</td>
+              <td>R-квадрат</td>
+              <td></td>
             </tr>
             <tr>
               <th scope="row">3</th>
-              <td class='norm_r_text'>Нормированный R-квадрат</td>
-              <td>the Bird</td>
+              <td>Нормированный R-квадрат</td>
+              <td></td>
             </tr>
             <tr>
                 <th scope='row'>4</th>
-                <td class='std_text'>Стандартная ошибка</td>
-                <td>34</td>
+                <td>Стандартная ошибка</td>
+                <td></td>
             </tr>
             <tr>
                 <th scope='row'> 5</th>
-                <td class="n_text">Наблюдения</td>
-                <td>34</td>
+                <td>Наблюдения</td>
+                <td></td>
           </tbody>
         </table>
     </div>

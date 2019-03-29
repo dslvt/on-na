@@ -17,13 +17,16 @@ var tr_mechanic = document.getElementById('tr_mechanic')
 var input_user_year = document.getElementById('input_year_user')
 var input_eng_cap_user = document.getElementById('eng_capacity_user')
 var input_mileage_user = document.getElementById('mileage_user')
+var input_price_user = document.getElementById('price_user')
+var input_h_power = document.getElementById('u_h_power')
 
 var search_button = document.getElementById('search_button')
 var product_button = document.getElementById('product_button')
 var report_button = document.getElementById('report_button')
 
+var table = document.getElementById('product_table')
 
-search_button.addEventListener('click', function(){
+function create_trunsm(){
     transm = []
 
     if(tr_automat.checked){
@@ -38,7 +41,11 @@ search_button.addEventListener('click', function(){
     if(tr_robot.checked){
         transm.push('robot')
     }
-    console.log(transm)
+    return transm
+}
+
+search_button.addEventListener('click', function(){
+    transm = create_trunsm()
     $.ajax({
         url:'query/',
         data:{
@@ -62,6 +69,7 @@ search_button.addEventListener('click', function(){
 });
 
 product_button.addEventListener('click', function(){
+    transm = create_trunsm()
     $.ajax({
         url:'product/',
         data:{
@@ -70,15 +78,20 @@ product_button.addEventListener('click', function(){
             'year':[input_year_from.value, input_year_to.value],
             'engine':[input_eng_capacity_from.value, input_eng_capacity_to.value],
             'millage':[input_mileage_from.value, input_mileage_to.value],
-            'kpp':transm
+            'kpp':transm,
+            'u_year':input_user_year.value,
+            'u_eng':input_eng_cap_user.value,
+            'u_mileage':input_mileage_user.value,
+            'u_price':input_price_user.value,
+            'u_h_power':input_h_power.value,
         },
         dataType:'json',
         success:function(data) {
-            document.getElementById('multi_r_text').innerHTML = data['multi_r'],
-            document.getElementById('r_sqr_text').innerHTML = data['r_sqr'],
-            document.getElementById('norm_r_text').innerHTML = data['norm_r'],
-            document.getElementById('std_text').innerHTML = data['std'],
-            document.getElementById('n_text').innerHTML = data['n']
+            table.rows[1].cells[2].innerHTML = data['multi_r']
+            table.rows[2].cells[2].innerHTML = data['r_sqr'],
+            table.rows[3].cells[2].innerHTML = data['norm_r'],
+            table.rows[4].cells[2].innerHTML = data['std'],
+            table.rows[5].cells[2].innerHTML = data['n']
         },
         fail:function(data){
         }

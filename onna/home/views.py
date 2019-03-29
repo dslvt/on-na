@@ -4,13 +4,22 @@ from django.http import JsonResponse
 from bs4 import BeautifulSoup as bf
 import urllib3
 import numpy as np
+from sklearn.metrics import r2_score
+
 
 def index(request):
     context = multiple_params
     return render(request, 'home/home.html', context)
 
 def query(request):
-    qr = request.GET.get('query', None)
+    qr = {
+        'mark':request.GET.get('mark', None),
+        'model':request.GET.get('model', None),
+        'year':request.GET.get('year', None),
+        'engine':request.GET.get('engine', None),
+        'millage':request.GET.get('millage', None),
+        'kpp':request.GET.get('kpp', None),
+    }
     soup = get_html_from_avito(qr)
     data = {
         'std': round(get_market_std(soup)),
@@ -24,9 +33,38 @@ def report(request):
     data = {}
     return JsonResponse(data)
 
+def create_train_data(soup_in):
+    raw_data = [preparsing(d) for d in get_data(soup_in)]
+    x_money = [money_prepros(d) for d in get_money(soup_in)]
+    x_year = [year_prepros(d) for d in get_year(soup_in)]
+    train_x = create_train_x(x_money, x_year, raw_data)
+    return train_x
+
 def product(request):
-    qr = request.GET.get('product', None)
-    data = {}
+    qr = {
+        'mark':request.GET.get('mark', None),
+        'model':request.GET.get('model', None),
+        'year':request.GET.get('year', None),
+        'engine':request.GET.get('engine', None),
+        'millage':request.GET.get('millage', None),
+        'kpp':request.GET.get('kpp', None),
+        'u_price':request.GET.get('u_price', None),
+        'u_mileage':request.GET.get('u_mileage', None),
+        'u_year':request.GET.get('u_year', None),
+        'u_eng':request.GET.get('u_eng', None),
+        'u_h_power':request.GET.get('u_h_power', None)
+    }
+    print('qr ',qr)
+    soup = get_html_from_avito(qr)
+    train_x = create_train_data(soup)
+    user_data = [0, qr['u_price'], qr['u_mileage'], qr['u_year'], 0,1,0,qr['u_eng'],qr['u_h_power']]
+    data = {
+        'multi_r': round(get_coor_coef(train_x, user_data)),
+        'r_sqr': round(get_r_sq(train_x, user_data)),
+        'norm_r': round(get_norm_r(train_x, user_data)),
+        'std': round(np.array(train_x).astype(np.float64).std()),
+        'n': round(len(train_x))
+    }
     return JsonResponse(data)
 
 def get_market_std(soup):
@@ -122,7 +160,7 @@ def year_prepros(req):
 def preparsing(shit):
     return [st.replace('\xa0', ' ').replace('\n', '').replace(' ', '') for st in shit.split(',')]
 
-def create_train_x(money, year, request):
+def create_train_x(x_money, x_year, request):
     train_x = []
     for rq in request:
         is_brouken = 0
@@ -150,14 +188,17 @@ def create_train_x(money, year, request):
     return train_x
 
 def get_coor_coef(train_x, train_y):
-    coor = np.corrcoef(np.array(train_x).astype(np.float), np.array(test_x).astype(np.float))
+    coor = np.corrcoef(np.array(train_x).astype(np.float), np.array(train_y).astype(np.float))
     return np.array([coor[i][-1] for i in range(len(coor))]).mean()
 
 def get_r_sq(train_x, train_y):
-    scores = [r2_score(np.array(test_x).astype(np.float64), np.array(train_x[i]).astype(np.float64)) for i in range(len(train_x))]
+    scores = [r2_score(np.array(train_y).astype(np.float64), np.array(train_x[i]).astype(np.float64)) for i in range(len(train_x))]
     return sum(scores)/len(scores)
 
-def get_norm_r(r, n, p):
+def get_norm_r(train_x ,user_data):
+    r = get_coor_coef(train_x, user_data)
+    n = len(train_x)
+    p = len(train_x)-len(train_x[0])
     return 1-(1-p)*(n-1)/(n-p-1)
 
 

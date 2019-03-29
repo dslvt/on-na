@@ -3,11 +3,6 @@
 
 {% block content %}
 
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value="">test value
-      </label>
-    </div>
 
     <div class="container_search">
         <input type="text" class="form-control" id="input_mark"  placeholder="mark">
@@ -18,8 +13,16 @@
         <input type="text" class="form-control" id="eng_capacity_to"  placeholder="Engine capacity, to">
         <input type="text" class="form-control" id="mileage_from"  placeholder="Mileage from">
         <input type="text" class="form-control" id="mileage_to"  placeholder="Mileage to">
-        <input type="text" class="form-control" id="trainsmission"  placeholder="Trainsmission type">
     </div>
+
+    <h5>Transmission type</h5>
+    <div class="trainsmission_type">
+        <input type="checkbox" id="tr_mechanic"> Mechanic
+        <input type="checkbox" id="tr_robot"> Robot
+        <input type="checkbox" id="tr_automat"> Automat
+        <input type="checkbox" id="tr_variator"> Variator
+    </div>
+
     <div class="search_button">
         <button type="button" class="btn btn-success" id="search_button"> Find </button>
     </div>

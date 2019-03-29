@@ -10,7 +10,29 @@ var input_transmission_type = document.getElementById('trainsmission')
 var search_button = document.getElementById('search_button')
 var search_result = document.getElementById('search_result')
 
+var tr_robot = document.getElementById('tr_robot')
+var tr_automat = document.getElementById('tr_automat')
+var tr_variator = document.getElementById('tr_variator')
+var tr_mechanic = document.getElementById('tr_mechanic')
+
+
+
 search_button.addEventListener('click', function(){
+    transm = []
+
+    if(tr_automat.checked){
+        transm.push('automat')
+    }
+    if(tr_mechanic.checked){
+        transm.push('mechanika')
+    }
+    if(tr_variator.checked){
+        transm.push('vibator')
+    }
+    if(tr_robot.checked){
+        transm.push('robot')
+    }
+    console.log(transm)
     $.ajax({
         url:'query/',
         data:{
@@ -19,7 +41,7 @@ search_button.addEventListener('click', function(){
             'year':[input_year_from.value, input_year_to.value],
             'engine':[input_eng_capacity_from.value, input_eng_capacity_to.value],
             'millage':[input_mileage_from.value, input_mileage_to.value],
-            'kpp':input_transmission_type.value
+            'kpp':transm
         },
         dataType: 'json',
         success:function(data){

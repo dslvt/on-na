@@ -7,7 +7,6 @@ var input_eng_capacity_to = document.getElementById('eng_capacity_to')
 var input_mileage_from = document.getElementById('mileage_from')
 var input_mileage_to = document.getElementById('mileage_to')
 var input_transmission_type = document.getElementById('trainsmission')
-var search_button = document.getElementById('search_button')
 var search_result = document.getElementById('search_result')
 
 var tr_robot = document.getElementById('tr_robot')
@@ -15,6 +14,13 @@ var tr_automat = document.getElementById('tr_automat')
 var tr_variator = document.getElementById('tr_variator')
 var tr_mechanic = document.getElementById('tr_mechanic')
 
+var input_user_year = document.getElementById('input_year_user')
+var input_eng_cap_user = document.getElementById('eng_capacity_user')
+var input_mileage_user = document.getElementById('mileage_user')
+
+var search_button = document.getElementById('search_button')
+var product_button = document.getElementById('product_button')
+var report_button = document.getElementById('report_button')
 
 
 search_button.addEventListener('click', function(){
@@ -52,3 +58,31 @@ search_button.addEventListener('click', function(){
         }
     });
 });
+
+product_button.addEventListener('click', function(){
+    $.ajax({
+        url:'product/',
+        data:{},
+        dataType:'json',
+        success:function(data) {
+
+        },
+        fail:function(data){
+
+        }
+    });
+});
+
+report_button.addEventListener('click', function(){
+    $.ajax(
+        url:'report/',
+        data:{},
+        dataType:'json',
+        success:function(data) {
+
+        },
+        fail:function(data){
+
+        }
+    );
+})

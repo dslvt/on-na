@@ -23,13 +23,41 @@
         <input type="checkbox" id="tr_variator"> Variator
     </div>
 
-    <div class="search_button">
-        <button type="button" class="btn btn-success" id="search_button"> Find </button>
+    <h3>Your car values</h3>
+    <div class="container_search">
+        <input type="text" class="form-control" id="input_year_user"  placeholder="year">
+        <input type="text" class="form-control" id="eng_capacity_user"  placeholder="Engine capacity">
+        <input type="text" class="form-control" id="mileage_user"  placeholder="Mileage">
     </div>
 
-    <h3>Search results</h3>
-    <img src="{% static "home/simple car.jpg" %}">
-    <h1 id="search_result"></h1>
+    <div class="button_type">
+        <div class="search_button">
+            <button type="button" class="btn btn-success" id="search_button"> Market analysis </button>
+        </div>
+
+        <div class="product_button">
+            <button type="button" class="btn btn-success" id="product_button"> Product analysis </button>
+        </div>
+
+        <div class="report_button">
+            <button type="button" class="btn btn-success" id="report_button"> Create report </button>
+        </div>
+    </div>
+
+
+    <div id="market_anal">
+        <h3>Search results</h3>
+        <img src="{% static "home/simple car.jpg" %}">
+        <h1 id="search_result"></h1>
+    </div>
+
+    <div id="product_anal">
+        <h3>Product anal</h3>
+    </div>
+
+    <div id="report_anal">
+        <h3> Report anal</h3>
+    </div>
 
     <script src="{% static "home/krasivo.js" %}"></script>
     <script src="{% static "home/search.js" %}"></script>

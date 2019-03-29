@@ -11,10 +11,19 @@ def index(request):
 
 def query(request):
     qr = request.GET.get('query', None)
-    print(qr)
     data = {
         'response':get_data_from_avito(qr)
     }
+    return JsonResponse(data)
+
+def report(request):
+    qr = request.GET.get('report', None)
+    data = {}
+    return JsonResponse(data)
+
+def product(request):
+    qr = request.GET.get('product', None)
+    data = {}
     return JsonResponse(data)
 
 def get_data_from_avito(params):
@@ -77,6 +86,62 @@ def get_type_range_url(name, prms):
     base = multiple_params[name]['base']
     return str(base)+'_'+str(first)+'-'+str(second)
 
+def create_reg_anal():
+    pass
+
+def get_data(soup):
+    return [price.text for price in soup.find_all('div', {"class": "specific-params specific-params_block"})]
+
+def get_money(soup):
+    return [price.text for price in soup.find_all('span', {"class": "price"})]
+
+def get_year(soup):
+    return [price.text for price in soup.find_all('a', {"class": "item-description-title-link"})]
+
+def money_prepros(req):
+    return req.replace(' ', '').replace('\n', '').replace('₽', '')
+def year_prepros(req):
+    return req.split(',')[1].replace(' ','')
+def preparsing(shit):
+    return [st.replace('\xa0', ' ').replace('\n', '').replace(' ', '') for st in shit.split(',')]
+
+def create_train_x(money, year, request):
+    train_x = []
+    for rq in request:
+        is_brouken = 0
+        km = 0
+        at,mt,amt=0,0,0
+        house_power = 0
+        engine_v = 0
+        for i in range(len(rq)):
+            if rq[i].find('Битый') != -1:
+                is_brouken = 1
+            if rq[i].find('км') != -1:
+                km = int(rq[i].replace('км', ''))
+            if rq[i].find('AT') != -1:
+                at=1
+            if rq[i].find('MT') != -1:
+                mt=1
+            if rq[i].find('AMT') != -1:
+                amt=1
+            if rq[i].find('л.с.') != -1:
+                house_power = int(rq[i][rq[i].find('(')+1:rq[i].find('л')])
+                engine_v = float(rq[i][rq[i].find('.')-1:rq[i].find('.')+2])
+            if x_money[i] == 0 or x_year[i] == 0 or house_power==0 or engine_v==0 or km==0:
+                continue
+            train_x.append([is_brouken,x_money[i],km,x_year[i], at,mt,amt,engine_v,house_power])
+    return train_x
+
+def get_coor_coef(train_x, train_y):
+    coor = np.corrcoef(np.array(train_x).astype(np.float), np.array(test_x).astype(np.float))
+    return np.array([coor[i][-1] for i in range(len(coor))]).mean()
+
+def get_r_sq(train_x, train_y):
+    scores = [r2_score(np.array(test_x).astype(np.float64), np.array(train_x[i]).astype(np.float64)) for i in range(len(train_x))]
+    return sum(scores)/len(scores)
+
+def get_norm_r(r, n, p):
+    return 1-(1-p)*(n-1)/(n-p-1)
 
 
 

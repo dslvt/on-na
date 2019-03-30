@@ -26,6 +26,8 @@ var report_button = document.getElementById('report_button')
 
 var table = document.getElementById('product_table')
 
+var download_link_button = document.getElementById('download_link_button')
+
 function create_trunsm(){
     transm = []
 
@@ -99,15 +101,27 @@ product_button.addEventListener('click', function(){
 });
 
 report_button.addEventListener('click', function(){
+    transm = create_trunsm()
     $.ajax({
         url:'report/',
-        data:{},
+        data:{
+            'mark':input_mark.value,
+            'model':input_model.value,
+            'year':[input_year_from.value, input_year_to.value],
+            'engine':[input_eng_capacity_from.value, input_eng_capacity_to.value],
+            'millage':[input_mileage_from.value, input_mileage_to.value],
+            'kpp':transm,
+            'u_year':input_user_year.value,
+            'u_eng':input_eng_cap_user.value,
+            'u_mileage':input_mileage_user.value,
+            'u_price':input_price_user.value,
+            'u_h_power':input_h_power.value,
+        },
         dataType:'json',
         success:function(data) {
-
+            download_link_button.setAttribute('href', data['url'])
         },
         fail:function(data){
-
         }
     });
 })

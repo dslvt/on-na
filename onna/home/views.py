@@ -5,6 +5,15 @@ from bs4 import BeautifulSoup as bf
 import urllib3
 import numpy as np
 from sklearn.metrics import r2_score
+import xlwt
+from datetime import datetime
+from django.conf import settings as djangoSettings
+from django.core.files.storage import FileSystemStorage
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+import os
+from django.conf import settings
+
 
 
 def index(request):
@@ -29,9 +38,92 @@ def query(request):
     return JsonResponse(data)
 
 def report(request):
-    qr = request.GET.get('report', None)
-    data = {}
-    return JsonResponse(data)
+    qr = {
+        'mark':request.GET.get('mark', None),
+        'model':request.GET.get('model', None),
+        'year':request.GET.get('year', None),
+        'engine':request.GET.get('engine', None),
+        'millage':request.GET.get('millage', None),
+        'kpp':request.GET.get('kpp', None),
+        'u_price':request.GET.get('u_price', None),
+        'u_mileage':request.GET.get('u_mileage', None),
+        'u_year':request.GET.get('u_year', None),
+        'u_eng':request.GET.get('u_eng', None),
+        'u_h_power':request.GET.get('u_h_power', None)
+    }
+    soup = get_html_from_avito(qr)
+    train_x = create_train_data(soup)
+    user_data = [0, qr['u_price'], qr['u_mileage'], qr['u_year'], 0,1,0,qr['u_eng'],qr['u_h_power']]
+    data = {
+        'multi_r': round(get_coor_coef(train_x, user_data)),
+        'r_sqr': round(get_r_sq(train_x, user_data)),
+        'norm_r': round(get_norm_r(train_x, user_data)),
+        'std': round(np.array(train_x).astype(np.float64).std()),
+        'n': round(len(train_x))
+    }
+    tdata = {'url':create_xls(qr,data,soup)}
+    return JsonResponse(tdata)
+
+def create_xls(qr,data,soup):
+
+    style0 = xlwt.easyxf('font: name Times New Roman, color-index red, bold on',
+        num_format_str='#,##0.00')
+    style1 = xlwt.easyxf(num_format_str='D-MMM-YY')
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Report analogs')
+
+    reg_labes = ["Регрессионная статистика", "Множественный R", "R-квадрат", "Нормированный R-квадрат", "Стандартная ошибка", "Наблюдения", "Аналоги"]
+    for i in range(len(reg_labes)):
+        ws.write(i, 0, reg_labes[i])
+    ws.write(1,1,data['multi_r'])
+    ws.write(2,1,data['r_sqr'])
+    ws.write(3,1,data['norm_r'])
+    ws.write(4,1,data['std'])
+    ws.write(5,1,data['n'])
+
+    rows_info = get_date(soup)
+    mark = qr['mark']
+    model = qr['model']
+
+    labes = ["#", "Mark", "Model", "Year", "Engine volume", "Mileage", "kpp", "Horse powers", 'is_bitaya', "url"]
+    #is_brouken,money[i],km,year[i], at,mt,amt,engine_v,house_power
+    for i in range(len(labes)):
+        ws.write(7, i, labes[i])
+    for i in range(len(rows_info)):
+        ws.write(8+i, 0, i+1)
+        ws.write(8+i, 1, mark)
+        ws.write(8+i, 2, model)
+        ws.write(8+i, 3, rows_info[i][3])
+        ws.write(8+i, 4, rows_info[i][7])
+        ws.write(8+i, 5, rows_info[i][2])
+        cur_kpp = 'MT'
+        if rows_info[i][4]==1:
+            rows_info[i][4] = 'AT'
+        if rows_info[i][5]==1:
+            rows_info[i][5] = 'MT'
+        if rows_info[i][6]==1:
+            rows_info[i][6] = 'AMT'
+        ws.write(8+i, 6, cur_kpp)
+        ws.write(8+i, 7, rows_info[i][8])
+        ws.write(8+i, 8, rows_info[i][9])
+    file_location = './media/report.xls'
+    wb.save(file_location)
+    print(os.path.join(settings.MEDIA_ROOT, 'report.xls'))
+    return os.path.join(settings.MEDIA_ROOT, 'report.xls')
+
+def get_date(soup):
+    raw_data = [preparsing(d) for d in get_data(soup)]
+    x_money = [money_prepros(d) for d in get_money(soup)]
+    x_year = [year_prepros(d) for d in get_year(soup)]
+    urls = get_url(soup)
+    pre_data = create_train_x(x_money,x_year, raw_data)
+    new_shit = []
+    for i in range(len(urls)):
+        new_shit.append(pre_data[i])
+        new_shit[-1].append(urls[i])
+
+    return new_shit
 
 def create_train_data(soup_in):
     raw_data = [preparsing(d) for d in get_data(soup_in)]
@@ -54,7 +146,6 @@ def product(request):
         'u_eng':request.GET.get('u_eng', None),
         'u_h_power':request.GET.get('u_h_power', None)
     }
-    print('qr ',qr)
     soup = get_html_from_avito(qr)
     train_x = create_train_data(soup)
     user_data = [0, qr['u_price'], qr['u_mileage'], qr['u_year'], 0,1,0,qr['u_eng'],qr['u_h_power']]
@@ -152,6 +243,10 @@ def get_money(soup):
 
 def get_year(soup):
     return [price.text for price in soup.find_all('a', {"class": "item-description-title-link"})]
+
+def get_url(soup):
+    base = 'https://www.avito.ru'
+    return [base + price['href'] for price in soup.find_all('a', {"class":"item-description-title-link"}, href=True)]
 
 def money_prepros(req):
     return req.replace(' ', '').replace('\n', '').replace('₽', '')

@@ -184,7 +184,7 @@ def create_train_x(x_money, x_year, request):
                 engine_v = float(rq[i][rq[i].find('.')-1:rq[i].find('.')+2])
             if x_money[i] == 0 or x_year[i] == 0 or house_power==0 or engine_v==0 or km==0:
                 continue
-            train_x.append([is_brouken,x_money[i],km,x_year[i], at,mt,amt,engine_v,house_power])
+        train_x.append([is_brouken,x_money[i],km,x_year[i], at,mt,amt,engine_v,house_power])
     return train_x
 
 def get_coor_coef(train_x, train_y):

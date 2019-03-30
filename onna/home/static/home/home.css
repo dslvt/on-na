@@ -24,3 +24,7 @@
 .your_car_values{
     display: block;
 }
+
+.statistic-charts{
+    display: none;
+}

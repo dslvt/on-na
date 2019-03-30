@@ -26,6 +26,10 @@
 
 
     <div class="button_type">
+        <div class="your_car_values_button">
+            <button type="button" class="btn btn-warning" id="your_car_values_button"> Inter your car values </button>
+        </div>
+
         <div class="search_button">
             <button type="button" class="btn btn-success" id="search_button"> Market analysis </button>
         </div>
@@ -37,10 +41,6 @@
         <div class="report_button">
             <button type="button" class="btn btn-success" id="report_button"> Create report </button>
         </div>
-
-        <div class="your_car_values_button">
-            <button type="button" class="btn btn-success" id="your_car_values_button"> Inter your car values </button>
-        </div>
     </div>
 
 
@@ -49,7 +49,6 @@
         <h4 id='std_market'>Standard deviation: </h4>
         <h4 id='mean_market'>Mean: </h4>
         <h4 id='n_market'>Amount: </h4>
-        <img src="{% static "home/simple car.jpg" %}">
         <h1 id="search_result"></h1>
     </div>
 
@@ -102,6 +101,18 @@
                 <td></td>
           </tbody>
         </table>
+
+        <div class="statistic_button">
+            <button type="button" class="btn btn-success" id="statistic_button"> Show statistic </button>
+        </div>
+        <div class="statistic-charts" id="charts">
+            <h4>Price</h4>
+            <img src="{% static "home/a.png" %}" alt="">
+            <h4>Engine volume</h4>
+            <img src="{% static "home/b.png" %}" alt="">
+            <h4>Horsepower</h4>
+            <img src="{% static "home/c.png" %}" alt="">
+        </div>
     </div>
 
     <div id="report_anal">

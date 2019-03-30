@@ -14,7 +14,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 import os
 from django.conf import settings
 from django.core.mail import EmailMessage
-
+import matplotlib.pyplot as plt
 
 
 
@@ -159,6 +159,9 @@ def product(request):
     }
     soup = get_html_from_avito(qr)
     train_x = create_train_data(soup)
+    hist_im(train_x, 1, os.path.join(settings.MEDIA_ROOT, 'a.png'))
+    hist_im(train_x, 7, os.path.join(settings.MEDIA_ROOT, 'b.png'))
+    hist_im(train_x, 8, os.path.join(settings.MEDIA_ROOT, 'c.png'))
     user_data = [0, qr['u_price'], qr['u_mileage'], qr['u_year'], 0,1,0,qr['u_eng'],qr['u_h_power']]
     data = {
         'multi_r': round(get_coor_coef(train_x, user_data)),
@@ -307,7 +310,18 @@ def get_norm_r(train_x ,user_data):
     p = len(train_x)-len(train_x[0])
     return 1-(1-p)*(n-1)/(n-p-1)
 
-
+def hist_im(train_x, j, name):
+    price_val = []
+    for i in range(len(train_x)):
+        price_val.append(train_x[i][j])
+    label = ''
+    if j  == 2:
+        label = 'price'
+    pl = plt.hist(price_val)
+    print(name)
+    fig = pl[2][0].figure
+    fig.savefig(name)
+    fig.clf()
 
 
 multiple_params = {

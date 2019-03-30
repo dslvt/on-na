@@ -13,6 +13,8 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 import os
 from django.conf import settings
+from django.core.mail import EmailMessage
+
 
 
 
@@ -49,7 +51,8 @@ def report(request):
         'u_mileage':request.GET.get('u_mileage', None),
         'u_year':request.GET.get('u_year', None),
         'u_eng':request.GET.get('u_eng', None),
-        'u_h_power':request.GET.get('u_h_power', None)
+        'u_h_power':request.GET.get('u_h_power', None),
+        'email':request.GET.get('email',None),
     }
     soup = get_html_from_avito(qr)
     train_x = create_train_data(soup)
@@ -62,7 +65,15 @@ def report(request):
         'n': round(len(train_x))
     }
     tdata = {'url':create_xls(qr,data,soup)}
+    print(qr['email'])
+    sent_email(qr['email'])
     return JsonResponse(tdata)
+
+def sent_email(email):
+    msg = EmailMessage('Report','your_report', 'salavatarus@gmail.com',[email])
+    msg.attach_file('media/report.xls')
+    msg.send()
+
 
 def create_xls(qr,data,soup):
 
@@ -311,7 +322,13 @@ multiple_params = {
         'base':188,
         '1960':0,
         '1970':782,
+        '1999':892,
+        '2004':897,
+        '2007':900,
         '2012':6045,
+        '2014':11017,
+        '2016':16381,
+        '2018':20303,
         '2019':405242,
     },
     'body':{
@@ -324,12 +341,19 @@ multiple_params = {
         'base':1374,
         '0.0':0,
         '0.6':15776,
+        '0.7':15777,
+        '0.8':15778,
+        '1.0':15780,
+        '1.2':15782,
+        '1.4':15784,
+        '1.6':15786,
+        '2.2':15792,
         '5.5':15825,
         '6.0':15830
     },
     'mark':{
         'skoda':['octavia', 'rapid'],
-        'vaz_lada':['kalina', 'granta'],
+        'vaz_lada':['kalina', 'granta', 'xray','2103','2104','2105', "largus", 'priora', 'vesta'],
         'kia':['rio','spectra']
     },
 }

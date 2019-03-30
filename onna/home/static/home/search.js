@@ -27,6 +27,8 @@ var report_button = document.getElementById('report_button')
 var table = document.getElementById('product_table')
 
 var download_link_button = document.getElementById('download_link_button')
+var sent_to_email_button = document.getElementById('email_button')
+var email_text = document.getElementById('email_text')
 
 function create_trunsm(){
     transm = []
@@ -100,7 +102,7 @@ product_button.addEventListener('click', function(){
     });
 });
 
-report_button.addEventListener('click', function(){
+sent_to_email_button.addEventListener('click', function(){
     transm = create_trunsm()
     $.ajax({
         url:'report/',
@@ -116,6 +118,7 @@ report_button.addEventListener('click', function(){
             'u_mileage':input_mileage_user.value,
             'u_price':input_price_user.value,
             'u_h_power':input_h_power.value,
+            'email':email_text.value,
         },
         dataType:'json',
         success:function(data) {

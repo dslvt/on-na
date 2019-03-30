@@ -1,0 +1,33 @@
+{% extends "kv/base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container_search">
+        <input type="text" class="form-control" id="rooms_from"  placeholder="Rooms from">
+        <input type="text" class="form-control" id="rooms_from"  placeholder="Rooms to">
+        <input type="text" class="form-control" id="input_model"  placeholder="Floor from">
+        <input type="text" class="form-control" id="input_model"  placeholder="Floor to">
+        <input type="text" class="form-control" id="input_year_from"  placeholder="S from">
+        <input type="text" class="form-control" id="input_year_to"  placeholder="S to">
+        <input type="text" class="form-control" id="eng_capacity_from"  placeholder="Home floor from">
+        <input type="text" class="form-control" id="eng_capacity_to"  placeholder="Home floor to">
+    </div>
+
+    <div class="button_type">
+        <div class="search_button">
+            <button type="button" class="btn btn-success" id="search_button"> Market analysis </button>
+        </div>
+    </div>
+
+    <div id="market_anal">
+        <h3>Search results</h3>
+        <h4 id='std_market'>Standard deviation: </h4>
+        <h4 id='mean_market'>Mean: </h4>
+        <h4 id='n_market'>Amount: </h4>
+        <h1 id="search_result"></h1>
+    </div>
+
+    <script src="{% static "kv/search.js" %}"></script>
+
+{% endblock content %}

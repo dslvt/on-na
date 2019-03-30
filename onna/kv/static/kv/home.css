@@ -1,0 +1,30 @@
+.container_search{
+  grid-template-columns: 50% 50%;
+  grid-template-rows: auto;
+  display: grid;
+}
+.button_type{
+    grid-template-columns: 200px, 200px, 200px;
+    grid-template-rows: auto;
+    display: grid;
+}
+
+.product_anal{
+    display: block;
+}
+
+.report_anal{
+    display: block;
+}
+
+.market_anal{
+    display: block;
+}
+
+.your_car_values{
+    display: block;
+}
+
+.statistic-charts{
+    display: none;
+}

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'kv.apps.KvConfig',
     'home.apps.HomeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
